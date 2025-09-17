@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator - Finvare</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="Finvare Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="emi-calculator.html">EMI Calculator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="apply-now.html">Apply Now</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- EMI Calculator -->
+    <section class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">EMI Calculator</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="emi-form">
+                            <div class="mb-3">
+                                <label for="loanAmount" class="form-label">Loan Amount (₹)</label>
+                                <input type="number" class="form-control" id="loanAmount" value="500000" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="interestRate" class="form-label">Interest Rate (%)</label>
+                                <input type="number" class="form-control" id="interestRate" value="10.5" step="0.1" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="loanTenure" class="form-label">Loan Tenure (Years)</label>
+                                <input type="number" class="form-control" id="loanTenure" value="5" required>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-primary" onclick="calculateEMI()">Calculate EMI</button>
+                            </div>
+                        </form>
+                        
+                        <div class="mt-4" id="emi-result" style="display: none;">
+                            <h3>EMI Calculation Result</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Loan Amount</th>
+                                        <td id="result-loan-amount"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Interest Rate</th>
+                                        <td id="result-interest-rate"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Loan Tenure</th>
+                                        <td id="result-loan-tenure"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Monthly EMI</th>
+                                        <td id="result-emi"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Interest Payable</th>
+                                        <td id="result-total-interest"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Payment (Principal + Interest)</th>
+                                        <td id="result-total-payment"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Finvare</h5>
+                    <p>Your trusted partner for financial solutions and loans.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="apply-now.html">Apply Now</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p>Email: info@finvare.com</p>
+                    <p>Phone: +91 98765 43210</p>
+                </div>
+            </div>
+            <hr class="my-4 bg-white">
+            <div class="text-center">
+                <p>&copy; 2023 Finvare. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function calculateEMI() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const loanTenure = parseFloat(document.getElementById('loanTenure').value);
+            
+            const monthlyInterestRate = interestRate / 12 / 100;
+            const numberOfMonths = loanTenure * 12;
+            
+            const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfMonths)) / 
+                        (Math.pow(1 + monthlyInterestRate, numberOfMonths) - 1);
+            
+            const totalPayment = emi * numberOfMonths;
+            const totalInterest = totalPayment - loanAmount;
+            
+            document.getElementById('result-loan-amount').textContent = '₹' + loanAmount.toLocaleString('en-IN');
+            document.getElementById('result-interest-rate').textContent = interestRate + '%';
+            document.getElementById('result-loan-tenure').textContent = loanTenure + ' Years';
+            document.getElementById('result-emi').textContent = '₹' + emi.toFixed(2).toLocaleString('en-IN');
+            document.getElementById('result-total-interest').textContent = '₹' + totalInterest.toFixed(2).toLocaleString('en-IN');
+            document.getElementById('result-total-payment').textContent = '₹' + totalPayment.toFixed(2).toLocaleString('en-IN');
+            
+            document.getElementById('emi-result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
